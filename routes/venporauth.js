@@ -140,7 +140,6 @@ var xmlData;
 });
 router.post('/vensave',(req,res)=>{
   //var cusid=req.body.cusid;
-  //cusid=179999;
   console.log(req.body);
   var xml=`<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:sap-com:document:sap:rfc:functions">
   <soapenv:Header/>
