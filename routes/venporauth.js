@@ -83,7 +83,7 @@ var xmlData;
   {
       let tok=jwt.sign(payload,'Bala');
       console.log(tok);
-      res.status(200).send({tok});
+      res.status(200).json({tok: tok,name:result.RETURN.MESSAGE_V1});
   }
   else{
     res.status(401).send('unauthorized');
@@ -176,6 +176,70 @@ const temp={TYPE:'//SOAP:Body//RETURN/TYPE'};
  })();
 
 });
+router.post('/vencredit',(req,res)=>{
+  //var cusid=req.body.cusid;
+  var xml=`<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:sap-com:document:sap:rfc:functions">
+  <soapenv:Header/>
+  <soapenv:Body>
+     <urn:ZBAPIVENCRED_FM>
+        <!--You may enter the following 3 items in any order-->
+        <VEN_ID>${req.body.venid}</VEN_ID>
+      
+     </urn:ZBAPIVENCRED_FM>
+  </soapenv:Body>
+</soapenv:Envelope>`
+const temp={CREDIT:['//SOAP:Body//IT_CRED/item',{COMP_CODE:'BUKRS',ITEM_NUM:'BUZEI',FISC_YEAR:'GJAHR',DOC_NO:'BELNR',LC_AMOUNT:'DMBTR',CURRENCY:'PSWSL',PD_NO:'EBELN',MAT_NUM:'MATNR',QUANTITY:'MENGE',ORDER_UNIT:'MEINS'}],
+DEBIT:['//SOAP:Body//IT_DEB/item',{COMP_CODE:'BUKRS',ITEM_NUM:'BUZEI',FISC_YEAR:'GJAHR',DOC_NO:'BELNR',LC_AMOUNT:'DMBTR',CURRENCY:'PSWSL',PD_NO:'EBELN',MAT_NUM:'MATNR',QUANTITY:'MENGE',ORDER_UNIT:'MEINS'}],
+RETURN:'//SOAP:Body//RETURN/TYPE'
+};
+  const url = 'http://dxktpipo.kaarcloud.com:50000/XISOAPAdapter/MessageServlet?senderParty=&senderService=BC_VENCRED&receiverParty=&receiverService=&interface=SI_VENCRED&interfaceNamespace=http://bala.com';
+ var xmlData;
+ (async () => {
+   const { response } = await soapRequest({ url: url, headers: sampleHeaders, xml: xml, timeout: 10000 });
+   const { headers, body, statusCode } = response;
+   console.log(statusCode);
+ 
+   xmlData = body;
+   const result = await transform(xmlData, temp);
+   console.log(result);
+   res.status(200).send(result);
+ })();
+
+});
+
+router.post('/venpayage',(req,res)=>{
+ //var cusid=req.body.cusid;
+ //var cusid=11;
+ var xml=`<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:sap-com:document:sap:rfc:functions">
+ <soapenv:Header/>
+ <soapenv:Body>
+    <urn:ZBAPIVENPAYAGE_FM>
+       <!--You may enter the following 3 items in any order-->
+       <VEN_ID>${req.body.venid}</VEN_ID>
+       <IT_PAYAGE/>
+       <RETURN/>
+    </urn:ZBAPIVENPAYAGE_FM>
+ </soapenv:Body>
+</soapenv:Envelope>`
+const temp={PAYAGE:['//SOAP:Body//IT_PAYAGE/item',{COMP_CODE:'COMP_CODE',ITEM_NUM:'ITEM_NUM',BLINE_DATE:'BLINE_DATE',FISC_YEAR:'FISC_YEAR',DOC_NO:'DOC_NO',DOC_DATE:'DOC_DATE',LC_AMOUNT:'LC_AMOUNT',CURRENCY:'CURRENCY',PSTNG_DATE:'PSTNG_DATE',AGE:'CLR_DOC_NO'}]
+};
+ const url = 'http://dxktpipo.kaarcloud.com:50000/XISOAPAdapter/MessageServlet?senderParty=&senderService=BC_VENPAYAGE&receiverParty=&receiverService=&interface=SI_VENPAYAGE&interfaceNamespace=http://bala.com';
+var xmlData;
+(async () => {
+  const { response } = await soapRequest({ url: url, headers: sampleHeaders, xml: xml, timeout: 10000 });
+  const { headers, body, statusCode } = response;
+  console.log(headers);
+  console.log(body);
+  console.log(statusCode);
+
+  xmlData = body;
+  const result = await transform(xmlData, temp);
+  console.log(result);
+  res.status(200).send(result);
+})();
+
+});
+
 
 
 module.exports=router;

@@ -83,7 +83,7 @@ var xmlData;
   {
       let tok=jwt.sign(payload,'Bala');
       console.log(tok);
-      res.status(200).send({tok});
+      res.status(200).json({tok: tok,name1:result.RETURN.MESSAGE_V1,name2:result.RETURN.MESSAGE_V2});
   }
   else{
     res.status(401).send('unauthorized');
@@ -256,6 +256,7 @@ router.post('/inqdata',(req,res)=>{
 };
  const url = 'http://dxktpipo.kaarcloud.com:50000/XISOAPAdapter/MessageServlet?senderParty=&senderService=BC_CUSINQ&receiverParty=&receiverService=&interface=SI_CUSINQ&interfaceNamespace=http://bala.com';
   var xmlData;
+  var iserror=true;
   (async () => {
     const { response } = await soapRequest({ url: url, headers: sampleHeaders, xml: xml, timeout: 10000 });
     const { headers, body, statusCode } = response;
@@ -267,7 +268,14 @@ router.post('/inqdata',(req,res)=>{
     const result = await transform(xmlData, temp);
     console.log(result);
     res.status(200).send(result);
+    iserror=false;
   })();
+  setTimeout(()=>{
+    if(iserror==true)
+    {
+    res.status(500).send("error occured");
+    }
+  },5000);
 });
 router.post('/cusdeli',(req,res)=>{
   var cusid=req.body.cusid;
