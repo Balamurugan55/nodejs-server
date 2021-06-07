@@ -240,6 +240,72 @@ var xmlData;
 
 });
 
+router.post('/venrfq',(req,res)=>{
+  //var cusid=req.body.cusid;
+  //cusid=179999;
+  var xml=`<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:sap-com:document:sap:rfc:functions">
+  <soapenv:Header/>
+  <soapenv:Body>
+     <urn:ZBAPIVENRFQ_FM>
+        <!--You may enter the following 4 items in any order-->
+        <VEN_ID>${req.body.venid}</VEN_ID>
+        
+     </urn:ZBAPIVENRFQ_FM>
+  </soapenv:Body>
+</soapenv:Envelope>`
+const temp={HEADER:['//SOAP:Body//IT_HEAD/item',{DOC_NO:'DOC_NUMBER',CO_CODE:'CO_CODE',PUR_ORG:'PURCH_ORG',PUR_GRP:'PUR_GROUP',CURRENCY:'CURRENCY',EXCHG_RATE:'EXCH_RATE',DOC_DATE:'DOC_DATE',PROCEDURE:'PROCEDURE',CREATED_ON:'CREATED_ON',CREATED_BY:'CREATED_BY'}],
+LINE:['//SOAP:Body//IT_ITEM/item',{DOC_NO:'DOC_NUMBER',DOC_ITEM:'DOC_ITEM',DESCRIPTION:'SHORT_TEXT',MATERIAL:'MATERIAL',PUR_MAT:'PUR_MAT',CO_CODE:'CO_CODE',PLANT:'PLANT',MAT_GRP:'MAT_GRP',QUANTITY:'QUANTITY',UNIT:'UNIT'}],
+RETURN:['//SOAP:Body//RETURN',{TYPE:'TYPE'}]
+};
+  const url = 'http://dxktpipo.kaarcloud.com:50000/XISOAPAdapter/MessageServlet?senderParty=&senderService=BC_VENRFQ&receiverParty=&receiverService=&interface=SI_VENRFQ&interfaceNamespace=http://bala.com';
+ var xmlData;
+ (async () => {
+   const { response } = await soapRequest({ url: url, headers: sampleHeaders, xml: xml, timeout: 10000 });
+   const { headers, body, statusCode } = response;
+   console.log(statusCode);
+ 
+   xmlData = body;
+   const result = await transform(xmlData, temp);
+   console.log(result);
+   res.status(200).send(result);
+ })();
+
+});
+
+router.post('/vengr',(req,res)=>{
+  var xml=`<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:sap-com:document:sap:rfc:functions">
+  <soapenv:Header/>
+  <soapenv:Body>
+     <urn:ZBAPIVENGR_FM>
+        <!--You may enter the following 4 items in any order-->
+        <VEN_ID>${req.body.venid}</VEN_ID>
+        <IT_HEAD/>
+        <IT_ITEM/>
+        <RETURN/>
+     </urn:ZBAPIVENGR_FM>
+  </soapenv:Body>
+</soapenv:Envelope>`
+const temp={HEADER:['//SOAP:Body//IT_HEAD/item',{DOC_NO:'MAT_DOC',DOC_YEAR:'DOC_YEAR',DOC_DATE:'DOC_DATE',PSTNG_DATE:'PSTNG_DATE',ENTRY_DATE:'ENTRY_DATE',USERNAME:'USERNAME',TR_EV_TYPE:'TR_EV_TYPE',VERSION:'VER_GR_GI_SLIP',REF_NO:'REF_DOC_NO',REF:'REF_DOC_NO_LONG'}],
+LINE:['//SOAP:Body//IT_ITEM/item',{DOC_NO:'MAT_DOC',DOC_ITEM:'DOC_YEAR',DESCRIPTION:'MATDOC_ITM',MATERIAL:'MATERIAL',PUR_MAT:'PO_NUMBER',CO_CODE:'PO_ITEM',PLANT:'PLANT',MAT_GRP:'ENTRY_QNT',QUANTITY:'MOVE_TYPE',UNIT:'STGE_LOC'}],
+RETURN:['//SOAP:Body//RETURN',{TYPE:'TYPE'}]
+};
+  const url = 'http://dxktpipo.kaarcloud.com:50000/XISOAPAdapter/MessageServlet?senderParty=&senderService=BC_VENGR&receiverParty=&receiverService=&interface=SI_VENGR&interfaceNamespace=http://bala.com';
+ var xmlData;
+ (async () => {
+   const { response } = await soapRequest({ url: url, headers: sampleHeaders, xml: xml, timeout: 10000 });
+   const { headers, body, statusCode } = response;
+   console.log(headers);
+   console.log(body);
+   console.log(statusCode);
+ 
+   xmlData = body;
+   const result = await transform(xmlData, temp);
+   console.log(result);
+   res.status(200).send(result);
+ })();
+
+});
+
 
 
 module.exports=router;

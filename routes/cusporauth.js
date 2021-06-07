@@ -203,31 +203,6 @@ router.post('/inqdata',(req,res)=>{
        </urn:ZBAPICUSINQ>
     </soapenv:Body>
  </soapenv:Envelope>`;
-//  const temp={
-//    OPER:'OPERATION',
-//    REC_DATE:'REC_DATE',
-//    REC_TIME:'REC_TIME',
-//    CREATED_BY:'CREATED_BY',
-//    DOC_DATE:'DOC_DATE',
-//    TRAN_GROUP:'TRAN_GROUP',
-//    DOC_TYPE:'DOC_TYPE',
-//    NET_VAL:'NET_VAL_HD',
-//    CURRENCY:'CURRENCY',
-//    SALES_ORG:'SALES_ORG',
-//    LINEITEMS:['//SOAP:Body//INQ_LINE/item',{
-//   DOC_NUMBER:'DOC_NUMBER',
-//   ITM_NUMBER:'ITM_NUMBER',
-//    MATERIAL:'MATERIAL',
-//    MAT_ENTRD:'MAT_ENTRD',
-//    MATL_GROUP:'MATL_GROUP',
-//    SHORT_TEXT:'SHORT_TEXT',
-//    ITEM_CATEG:'ITEM_CATEG',
-//    ORDER_PROB:'ORDER_PROB',
-//    CREAT_DATE:'CREAT_DATE',
-//    CREATED_BY:'CREATED_BY'
-//   }],
-//   RETURN:['//SOAP:Body//RETURN/item',{TYPE:'TYPE'}]
-//  };
  const temp={
    headers:['//SOAP:Body//INQ_HEAD',{
   OPER:'OPERATION',
@@ -309,7 +284,7 @@ RETURN:['//SOAP:Body//RETURN',{TYPE:'TYPE'}]
    res.status(200).send(result);
  })();
 
-})
+});
 router.post('/cussave',(req,res)=>{
   //var cusid=req.body.cusid;
   //cusid=179999;
