@@ -408,7 +408,7 @@ router.post('/cuspayage',(req,res)=>{
      </urn:ZBAPICUSPAYAGE_FM>
   </soapenv:Body>
 </soapenv:Envelope>`
-const temp={PAYAGE:['//SOAP:Body//IT_PAYAGE/item',{COMP_CODE:'COMP_CODE',ITEM_NUM:'ITEM_NUM',ALLOC_NMBR:'ALLOC_NMBR',FISC_YEAR:'FISC_YEAR',DOC_NO:'DOC_NO',DOC_DATE:'DOC_DATE',LC_AMOUNT:'LC_AMOUNT',CURRENCY:'CURRENCY',PSTNG_DATE:'PSTNG_DATE',AGE:'CLR_DOC_NO'}]
+const temp={PAYAGE:['//SOAP:Body//IT_PAYAGE/item',{COMP_CODE:'COMP_CODE',ITEM_NUM:'ITEM_NUM',ALLOC_NMBR:'ALLOC_NMBR',FISC_YEAR:'FISC_YEAR',DOC_NO:'DOC_NO',DOC_DATE:'BLINE_DATE',LC_AMOUNT:'LC_AMOUNT',CURRENCY:'CURRENCY',PSTNG_DATE:'PSTNG_DATE',AGE:'CLR_DOC_NO'}]
 };
   const url = 'http://dxktpipo.kaarcloud.com:50000/XISOAPAdapter/MessageServlet?senderParty=&senderService=BC_CUSPAYAGE&receiverParty=&receiverService=&interface=SI_CUSPAYAGE&interfaceNamespace=http://bala.com';
  var xmlData;
