@@ -72,8 +72,6 @@ var xmlData;
 (async () => {
   const { response } = await soapRequest({ url: url, headers: sampleHeaders, xml: xml, timeout: 10000 });
   const { headers, body, statusCode } = response;
-  console.log(headers);
-  console.log(body);
   console.log(statusCode);
 
   xmlData = body;
@@ -134,8 +132,6 @@ router.post('/cusprofile',(req,res)=>{
   (async () => {
     const { response } = await soapRequest({ url: url, headers: sampleHeaders, xml: xml, timeout: 10000 });
     const { headers, body, statusCode } = response;
-    console.log(headers);
-    console.log(body);
     console.log(statusCode);
   
     xmlData = body;
@@ -180,8 +176,6 @@ router.post('/inquiry',(req,res)=>{
   (async () => {
     const { response } = await soapRequest({ url: url, headers: sampleHeaders, xml: xml, timeout: 10000 });
     const { headers, body, statusCode } = response;
-    console.log(headers);
-    console.log(body);
     console.log(statusCode);
   
     xmlData = body;
@@ -192,19 +186,21 @@ router.post('/inquiry',(req,res)=>{
 });
 router.post('/inqdata',(req,res)=>{
     //var saledoc=10000048;
-    var saledoc=req.body.saledoc;
-    console.log(saledoc);
+    //var saledoc=req.body.saledoc;
+    //console.log(saledoc);
     var xml=`<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:sap-com:document:sap:rfc:functions">
     <soapenv:Header/>
     <soapenv:Body>
-       <urn:ZBAPICUSINQ>
-          <!--You may enter the following 3 items in any order-->
-          <SALEDOC>${saledoc}</SALEDOC>
-       </urn:ZBAPICUSINQ>
+       <urn:ZBAPICUSINQ2_FM>
+          <!--You may enter the following 4 items in any order-->
+          <CUSID>${req.body.cusid}</CUSID>
+          
+       </urn:ZBAPICUSINQ2_FM>
     </soapenv:Body>
  </soapenv:Envelope>`;
  const temp={
-   headers:['//SOAP:Body//INQ_HEAD',{
+   headers:['//SOAP:Body//IT_INQHEAD/item',{
+  DOC_NUMBER:'DOC_NUMBER',
   OPER:'OPERATION',
   REC_DATE:'REC_DATE',
   REC_TIME:'REC_TIME',
@@ -215,7 +211,7 @@ router.post('/inqdata',(req,res)=>{
   NET_VAL:'NET_VAL_HD',
   CURRENCY:'CURRENCY',
   SALES_ORG:'SALES_ORG'}],
-  LINEITEMS:['//SOAP:Body//INQ_LINE/item',{
+  LINEITEMS:['//SOAP:Body//IT_INQLINE/item',{
  DOC_NUMBER:'DOC_NUMBER',
  ITM_NUMBER:'ITM_NUMBER',
   MATERIAL:'MATERIAL',
@@ -229,14 +225,12 @@ router.post('/inqdata',(req,res)=>{
  }],
  RETURN:['//SOAP:Body//RETURN/item',{TYPE:'TYPE'}]
 };
- const url = 'http://dxktpipo.kaarcloud.com:50000/XISOAPAdapter/MessageServlet?senderParty=&senderService=BC_CUSINQ&receiverParty=&receiverService=&interface=SI_CUSINQ&interfaceNamespace=http://bala.com';
+ const url = 'http://dxktpipo.kaarcloud.com:50000/XISOAPAdapter/MessageServlet?senderParty=&senderService=BC_CUSINQ2&receiverParty=&receiverService=&interface=SI_CUSINQ2&interfaceNamespace=http://bala.com';
   var xmlData;
   var iserror=true;
   (async () => {
     const { response } = await soapRequest({ url: url, headers: sampleHeaders, xml: xml, timeout: 10000 });
     const { headers, body, statusCode } = response;
-    console.log(headers);
-    console.log(body);
     console.log(statusCode);
   
     xmlData = body;
@@ -274,8 +268,6 @@ RETURN:['//SOAP:Body//RETURN',{TYPE:'TYPE'}]
  (async () => {
    const { response } = await soapRequest({ url: url, headers: sampleHeaders, xml: xml, timeout: 10000 });
    const { headers, body, statusCode } = response;
-   console.log(headers);
-   console.log(body);
    console.log(statusCode);
  
    xmlData = body;
@@ -312,8 +304,6 @@ const temp={TYPE:'//SOAP:Body//RETURN/TYPE'};
  (async () => {
    const { response } = await soapRequest({ url: url, headers: sampleHeaders, xml: xml, timeout: 10000 });
    const { headers, body, statusCode } = response;
-   console.log(headers);
-   console.log(body);
    console.log(statusCode);
  
    xmlData = body;
@@ -344,8 +334,6 @@ const temp={SALESORDERS:['//SOAP:Body//IT_CUSSALEOR/item',{SD_DOC:'SD_DOC',ITM_N
  (async () => {
    const { response } = await soapRequest({ url: url, headers: sampleHeaders, xml: xml, timeout: 10000 });
    const { headers, body, statusCode } = response;
-   console.log(headers);
-   console.log(body);
    console.log(statusCode);
  
    xmlData = body;
@@ -383,8 +371,6 @@ RETURN:'//SOAP:Body//RETURN/TYPE'
   (async () => {
     const { response } = await soapRequest({ url: url, headers: sampleHeaders, xml: xml, timeout: 10000 });
     const { headers, body, statusCode } = response;
-    console.log(headers);
-    console.log(body);
     console.log(statusCode);
   
     xmlData = body;
@@ -415,8 +401,6 @@ const temp={PAYAGE:['//SOAP:Body//IT_PAYAGE/item',{COMP_CODE:'COMP_CODE',ITEM_NU
  (async () => {
    const { response } = await soapRequest({ url: url, headers: sampleHeaders, xml: xml, timeout: 10000 });
    const { headers, body, statusCode } = response;
-   console.log(headers);
-   console.log(body);
    console.log(statusCode);
  
    xmlData = body;
@@ -492,8 +476,6 @@ const temp={cusid:'//SOAP:Body//CUSID_OUT'};
  (async () => {
    const { response } = await soapRequest({ url: url, headers: sampleHeaders, xml: xml, timeout: 10000 });
    const { headers, body, statusCode } = response;
-   console.log(headers);
-   console.log(body);
    console.log(statusCode);
  
    xmlData = body;
@@ -508,7 +490,7 @@ console.log(resultArray);
 
 
 });
-setTimeout(()=> res.status(200).send(resultArray),4000)
+setTimeout(()=> res.status(200).send(resultArray),6000);
 
 
 });
@@ -542,8 +524,6 @@ const temp={cusid:'//SOAP:Body//CUSID_OUT'};
  (async () => {
    const { response } = await soapRequest({ url: url, headers: sampleHeaders, xml: xml, timeout: 10000 });
    const { headers, body, statusCode } = response;
-   console.log(headers);
-   console.log(body);
    console.log(statusCode);
  
    xmlData = body;
@@ -572,8 +552,6 @@ const temp1={TYPE:'//SOAP:Body//RETURN/TYPE'};
  (async () => {
    const { response } = await soapRequest({ url: url1, headers: sampleHeaders, xml: xml1, timeout: 10000 });
    const { headers, body, statusCode } = response;
-   console.log(headers);
-   console.log(body);
    console.log(statusCode);
  
    xmlData1 = body;

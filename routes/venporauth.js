@@ -72,8 +72,6 @@ var xmlData;
 (async () => {
   const { response } = await soapRequest({ url: url, headers: sampleHeaders, xml: xml, timeout: 10000 });
   const { headers, body, statusCode } = response;
-  console.log(headers);
-  console.log(body);
   console.log(statusCode);
 
   xmlData = body;
@@ -128,8 +126,6 @@ var xmlData;
 (async () => {
   const { response } = await soapRequest({ url: url, headers: sampleHeaders, xml: xml, timeout: 10000 });
   const { headers, body, statusCode } = response;
-  console.log(headers);
-  console.log(body);
   console.log(statusCode);
 
   xmlData = body;
@@ -165,8 +161,6 @@ const temp={TYPE:'//SOAP:Body//RETURN/TYPE'};
  (async () => {
    const { response } = await soapRequest({ url: url, headers: sampleHeaders, xml: xml, timeout: 10000 });
    const { headers, body, statusCode } = response;
-   console.log(headers);
-   console.log(body);
    console.log(statusCode);
  
    xmlData = body;
@@ -228,8 +222,6 @@ var xmlData;
 (async () => {
   const { response } = await soapRequest({ url: url, headers: sampleHeaders, xml: xml, timeout: 10000 });
   const { headers, body, statusCode } = response;
-  console.log(headers);
-  console.log(body);
   console.log(statusCode);
 
   xmlData = body;
@@ -294,8 +286,6 @@ RETURN:['//SOAP:Body//RETURN',{TYPE:'TYPE'}]
  (async () => {
    const { response } = await soapRequest({ url: url, headers: sampleHeaders, xml: xml, timeout: 10000 });
    const { headers, body, statusCode } = response;
-   console.log(headers);
-   console.log(body);
    console.log(statusCode);
  
    xmlData = body;
@@ -304,6 +294,87 @@ RETURN:['//SOAP:Body//RETURN',{TYPE:'TYPE'}]
    res.status(200).send(result);
  })();
 
+});
+
+router.post('/venpo',(req,res)=>{
+  var xml=`<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:sap-com:document:sap:rfc:functions">
+  <soapenv:Header/>
+  <soapenv:Body>
+     <urn:ZBAPIVENPO_FM>
+        <!--You may enter the following 4 items in any order-->
+        <VEN_ID>${req.body.venid}</VEN_ID>
+        
+     </urn:ZBAPIVENPO_FM>
+  </soapenv:Body>
+</soapenv:Envelope>`
+const temp={HEADER:['//SOAP:Body//IT_HEAD/item',{col1:'PO_NUMBER',col2:'CO_CODE',col3:'LAST_ITEM',col4:'EXCH_RATE',col5:'DOC_DATE',col6:'PURCH_ORG',col7:'PUR_GROUP',col8:'CURRENCY',col9:'CREATED_ON',col10:'CREATED_BY'}],
+LINE:['//SOAP:Body//IT_ITEM/item',{col1:'PO_NUMBER',col2:'CO_CODE',col3:'PO_ITEM',col4:'PUR_MAT',col5:'MATERIAL',col6:'SHORT_TEXT',col7:'QUANTITY',col8:'NET_PRICE',col9:'GROS_VALUE',col10:'CHANGED_ON'}],
+RETURN:['//SOAP:Body//RETURN',{TYPE:'TYPE'}]
+};
+  const url = 'http://dxktpipo.kaarcloud.com:50000/XISOAPAdapter/MessageServlet?senderParty=&senderService=BC_VENPO&receiverParty=&receiverService=&interface=SI_VENPO&interfaceNamespace=http://bala.com';
+ var xmlData;
+ (async () => {
+   const { response } = await soapRequest({ url: url, headers: sampleHeaders, xml: xml, timeout: 10000 });
+   const { headers, body, statusCode } = response;
+   console.log(statusCode);
+ 
+   xmlData = body;
+   const result = await transform(xmlData, temp);
+   res.status(200).send(result);
+ })();
+
+});
+
+router.post('/veninv',(req,res)=>{
+  var xml=`<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:sap-com:document:sap:rfc:functions">
+  <soapenv:Header/>
+  <soapenv:Body>
+     <urn:ZBAPIVENINV_FM>
+        <!--You may enter the following 3 items in any order-->
+        <FIN_YR>${req.body.fin_yr}</FIN_YR>
+        <INV_NO>${req.body.inv_no}</INV_NO>
+        <VEN_ID>${req.body.venid}</VEN_ID>
+     </urn:ZBAPIVENINV_FM>
+  </soapenv:Body>
+</soapenv:Envelope>`
+const temp={pdf:'//SOAP:Body//ENINV_PDF/item'};
+  const url = 'http://dxktpipo.kaarcloud.com:50000/XISOAPAdapter/MessageServlet?senderParty=&senderService=BC_VENINV&receiverParty=&receiverService=&interface=SI_VENINV&interfaceNamespace=http://bala.com';
+ var xmlData;
+ (async () => {
+   const { response } = await soapRequest({ url: url, headers: sampleHeaders, xml: xml, timeout: 50000 });
+   const { headers, body, statusCode } = response;
+   console.log(statusCode);
+ 
+   xmlData = body;
+   const result = await transform(xmlData, temp);
+   res.status(200).send({pdf:'data:application/pdf;base64,'+result.pdf});
+ })();
+});
+
+router.post('/veninvdis',(req,res)=>{
+  var xml=`<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:sap-com:document:sap:rfc:functions">
+  <soapenv:Header/>
+  <soapenv:Body>
+     <urn:ZBAPIVENINVDIS_FM>
+        <!--You may enter the following 3 items in any order-->
+        <VEN_ID>${req.body.venid}</VEN_ID>
+    
+     </urn:ZBAPIVENINVDIS_FM>
+  </soapenv:Body>
+</soapenv:Envelope>`
+const temp={invoice:['//SOAP:Body//IT_INVHEAD/item',{INV_NO:'INV_DOC_NO',FISC_YEAR:'FISC_YEAR',PSTNG_DATE:'PSTNG_DATE',DOC_DATE:'DOC_DATE',ENTRY_DATE:'ENTRY_DATE',ENTRY_TIME:'ENTRY_TIME',COMP_CODE:'COMP_CODE',GROSS_AMNT:'GROSS_AMNT',CURRENCY:'CURRENCY',INVOICE_STATUS:'INVOICE_STATUS'}]};
+  const url = 'http://dxktpipo.kaarcloud.com:50000/XISOAPAdapter/MessageServlet?senderParty=&senderService=BC_VENINVDIS&receiverParty=&receiverService=&interface=SI_VENINVDIS&interfaceNamespace=http://bala.com';
+ var xmlData;
+ (async () => {
+   const { response } = await soapRequest({ url: url, headers: sampleHeaders, xml: xml, timeout: 10000 });
+   const { headers, body, statusCode } = response;
+   console.log(statusCode);
+ 
+   xmlData = body;
+   const result = await transform(xmlData, temp);
+   console.log(result);
+   res.status(200).send(result);
+ })();
 });
 
 
