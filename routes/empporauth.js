@@ -276,16 +276,10 @@ router.post('/emplreq',(req,res)=>{
   <soapenv:Body>
      <urn:ZBAPIEMPLREQ_FM>
         <!--You may enter the following 7 items in any order-->
-        <!--Optional:-->
-        <AHOURS>${req.body.ahours}</AHOURS>
         <EDATE>${req.body.edate}</EDATE>
         <EMP_ID>${req.body.empid}</EMP_ID>
-        <!--Optional:-->
-        <ETIME>${req.body.etime}</ETIME>
         <LTYPE>${req.body.ltype}</LTYPE>
         <SDATE>${req.body.sdate}</SDATE>
-        <!--Optional:-->
-        <STIME>${req.body.stime}</STIME>
      </urn:ZBAPIEMPLREQ_FM>
   </soapenv:Body>
 </soapenv:Envelope>`
@@ -309,6 +303,7 @@ const temp={TYPE:'//SOAP:Body//RETURN/TYPE',
 
 router.post('/empfset',(req,res)=>{
   //var cusid=req.body.cusid;
+  var flag=0;
   console.log(req.body);
   var xml=`<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:sap-com:document:sap:rfc:functions">
   <soapenv:Header/>
@@ -353,8 +348,16 @@ const temp={TYPE:'//SOAP:Body//RETURN/TYPE',
    xmlData = body;
    const result = await transform(xmlData, temp);
    console.log(result);
+   for(i=0;i<result.WAGES1.length;i++){
+     result.WAGES1[i].AMT=parseInt(result.WAGES1[i].AMT)*10.0;
+   }
    res.status(200).send(result);
+   flag=1;
  })();
-
+ setTimeout(()=>{
+   if(flag==0){
+   res.status(404).send("not found");
+   }
+ },5000);
 });
 module.exports=router;
