@@ -19,15 +19,20 @@ router.post('/', function(req, res, next) {
 });
 var auth = "Basic UE9VU0VSOlRlY2hAMjAyMQ==";
 console.log(auth);
+
 router.get('/',(req, res, next) =>{
-  soap.createClient(url,{wsdl_options: {timeout: 1000000},wsdl_headers:{Authorization:auth}},(err,client)=>{
+  (async ()=>{
+    await soap.createClient(url,{wsdl_options: {timeout: 1000},wsdl_headers:{Authorization:auth}},(err,client)=>{
+      console.log(err);
       console.log(client.describe());
       client.IT_RFC_OUT(args,(er,res)=>{
         console.log(er);
-      },{timeout: 1000000});
+      });
+      res.send('true');
       //console.log(client);
       //console.log(client);
   });
-  res.send('true');
+  })
+ 
 });
 module.exports = router;

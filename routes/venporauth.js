@@ -7,6 +7,7 @@ var multer=require('multer');
 var path= require('path');
 var reader= require('xlsx')
 const { post } = require('.');
+const { FailedDependency } = require('http-errors');
 const sampleHeaders = {
   'user-agent': 'sampleTest',
   'Content-Type': 'text/xml;charset=UTF-8',
@@ -55,7 +56,7 @@ const template = {
 const url = 'http://dxktpipo.kaarcloud.com:50000/XISOAPAdapter/MessageServlet?senderParty=&senderService=BC_VENLOGIN&receiverParty=&receiverService=&interface=SI_VENLOGIN&interfaceNamespace=http://bala.com';
 
 var val = 22;
-console.log(pass);
+console.log(req.body.venid);
 const xml = `<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:sap-com:document:sap:rfc:functions">
 <soapenv:Header/>
 <soapenv:Body>
@@ -86,6 +87,7 @@ var xmlData;
   else{
     res.status(401).send('unauthorized');
   }
+  //flag=1;
 })();
 
 

@@ -9,6 +9,7 @@ var usersRouter = require('./routes/users');
 var cusporauthRouter=require('./routes/cusporauth');
 var venporauthRouter = require('./routes/venporauth');
 var empporauthRouter = require('./routes/empporauth');
+var mainporauthRouter = require('./routes/mainporauth');
 var app = express();
 
 // view engine setup
@@ -26,6 +27,7 @@ app.use('/users', usersRouter);
 app.use('/cusporauth',cusporauthRouter);
 app.use('/venporauth',venporauthRouter);
 app.use('/empporauth',empporauthRouter);
+app.use('/mainporauth',mainporauthRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
