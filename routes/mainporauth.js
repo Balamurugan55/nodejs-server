@@ -88,8 +88,38 @@ var xmlData;
     res.status(200).json({type:'E'});
   }
 })();
+router.get('/get',(req,res)=>{
+  res.status(200).send('true');
+});
+router.post('/mainwoget',(req,res)=>{
+  var xml=`<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:sap-com:document:sap:rfc:functions">
+  <soapenv:Header/>
+  <soapenv:Body>
+     <urn:ZBAPIMAINWOGET_FM>
+        <!--You may enter the following 6 items in any order-->
+        <PLAN_GROUP>${req.body.plangroup}</PLAN_GROUP>
+        <PLAN_PLANT>${req.body.planplant}</PLAN_PLANT>
+        
+     </urn:ZBAPIMAINWOGET_FM>
+  </soapenv:Body>
+</soapenv:Envelope>`
+const temp={WO_CREATED:['//SOAP:Body//WO_CREATED/item',{col1:'ORDERID',col2:'DESCRIPTION',col3:'ORDERTYPE',col4:'PRIORITY',col5:'PLANT'}],
+RETURN:['//SOAP:Body//RETURN',{TYPE:'TYPE'}]
+};
+  const url = 'http://dxktpipo.kaarcloud.com:50000/XISOAPAdapter/MessageServlet?senderParty=&senderService=BC_MAINWOGET&receiverParty=&receiverService=&interface=SI_MAINWOGET&interfaceNamespace=http://bala.com';
+ var xmlData;
+ (async () => {
+   const { response } = await soapRequest({ url: url, headers: sampleHeaders, xml: xml, timeout: 10000 });
+   const { headers, body, statusCode } = response;
+   console.log(statusCode);
+ 
+   xmlData = body;
+   const result = await transform(xmlData, temp);
+   console.log(result);
+   res.status(200).send(result);
+ })();
 
-
+});
 
 
 });
