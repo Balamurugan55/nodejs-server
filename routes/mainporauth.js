@@ -41,6 +41,8 @@ router.post('/', function(req,res, next) {
   
 
 const template = {
+    plangroup:'//SOAP:Body//PLAN_GRP',
+    planplant:'//SOAP:Body//PLAN_PLANT',
     RETURN:{
       TYPE:'//SOAP:Body//RETURN/TYPE',
       CODE:'//SOAP:Body//RETURN/CODE',
@@ -82,10 +84,10 @@ var xmlData;
   {
       let tok=jwt.sign(payload,'Bala');
       console.log(result);
-      res.status(200).json({type:'S'});
+      res.status(200).json(result);
   }
   else{
-    res.status(200).json({type:'E'});
+    res.status(200).json(result);
   }
 })();
 router.get('/get',(req,res)=>{
@@ -124,7 +126,8 @@ router.post('/mainnotcr',(req,res)=>{
      </urn:ZBAPIMAINNOTCR_FM>
   </soapenv:Body>
 </soapenv:Envelope>`
-const temp={RETURN:'//SOAP:Body//RETURN/TYPE'
+const temp={RETURN:'//SOAP:Body//RETURN/TYPE',
+NOTNO:'//SOAP:Body//NOT_NO'
 };
   const url = 'http://dxktpipo.kaarcloud.com:50000/XISOAPAdapter/MessageServlet?senderParty=&senderService=BC_MAINNOTCR&receiverParty=&receiverService=&interface=SI_MAINNOTCR&interfaceNamespace=http://bala.com';
  var xmlData;
@@ -147,14 +150,24 @@ router.post('/mainnotdet',(req,res)=>{
   <soapenv:Header/>
   <soapenv:Body>
      <urn:ZBAPIMAINNOTDET_FM>
-        <NOT_NO>${req.notno}</NOT_NO>
+        <NOT_NO>${req.body.notno}</NOT_NO>
      </urn:ZBAPIMAINNOTDET_FM>
   </soapenv:Body>
 </soapenv:Envelope>`
-const temp={WO_CREATED:['//SOAP:Body//WO_CREATED/item',{col1:'ORDERID',col2:'DESCRIPTION',col3:'ORDERTYPE',col4:'PRIORITY',col5:'PLANT'}],
-RETURN:['//SOAP:Body//RETURN',{TYPE:'TYPE'}]
+const temp={
+  NOTNO:'//SOAP:Body//NOT_HEADER/NOTIF_NO',
+  EQUIPID:'//SOAP:Body//NOT_HEADER/EQUIPMENT',
+  MALFUNC_DATE:'//SOAP:Body//NOT_HEADER/STRMLFNDATE',
+  MALFUNC_TIME:'//SOAP:Body//NOT_HEADER/STRMLFNTIME',
+  DESCRIPTION:'//SOAP:Body//NOT_HEADER/SHORT_TEXT',
+  PRIORITY:'//SOAP:Body//NOT_HEADER/PRIORITY',
+  SDATE:'//SOAP:Body//NOT_HEADER/DESSTDATE',
+  EDATE:'//SOAP:Body//NOT_HEADER/DESENDDATE',
+  REPORTED_BY:'//SOAP:Body//NOT_HEADER/REPORTEDBY',
+  FUNC_LOC:'//SOAP:Body//NOT_HEADER/FUNCT_LOC',
+RETURN:'//SOAP:Body//RETURN/TYPE'
 };
-  const url = 'http://dxktpipo.kaarcloud.com:50000/XISOAPAdapter/MessageServlet?senderParty=&senderService=BC_MAINNOTDET&receiverParty=&receiverService=&interface=SI_MAINNOTGET&interfaceNamespace=http://bala.com';
+  const url = 'http://dxktpipo.kaarcloud.com:50000/XISOAPAdapter/MessageServlet?senderParty=&senderService=BC_MAINNOTDET&receiverParty=&receiverService=&interface=SI_MAINNOTDET&interfaceNamespace=http://bala.com';
  var xmlData;
  (async () => {
    const { response } = await soapRequest({ url: url, headers: sampleHeaders, xml: xml, timeout: 10000 });
@@ -183,10 +196,12 @@ router.post('/mainnotget',(req,res)=>{
      </urn:ZBAPIMAINNOTGET_FM>
   </soapenv:Body>
 </soapenv:Envelope>`
-const temp={WO_CREATED:['//SOAP:Body//WO_CREATED/item',{col1:'ORDERID',col2:'DESCRIPTION',col3:'ORDERTYPE',col4:'PRIORITY',col5:'PLANT'}],
-RETURN:['//SOAP:Body//RETURN',{TYPE:'TYPE'}]
+const temp={NOT_OUTSTANDING:['//SOAP:Body//NOT_OUTSTANDING/item',{col1:'NOTIFICAT',col2:'DESCRIPT',col3:'PRIORITY'}],
+NOT_CREATED:['//SOAP:Body//NOT_LIST/item',{col1:'NOTIFICAT',col2:'DESCRIPT',col3:'PRIORITY'}],
+NOT_COMPLETED:['//SOAP:Body//NOT_COMPLETED/item',{col1:'NOTIFICAT',col2:'DESCRIPT',col3:'PRIORITY'}],
+RETURN:'//SOAP:Body//RETURN/TYPE'
 };
-  const url = 'http://dxktpipo.kaarcloud.com:50000/XISOAPAdapter/MessageServlet?senderParty=&senderService=BC_MAINNOTDET&receiverParty=&receiverService=&interface=SI_MAINNOTGET&interfaceNamespace=http://bala.com';
+  const url = 'http://dxktpipo.kaarcloud.com:50000/XISOAPAdapter/MessageServlet?senderParty=&senderService=BC_MAINNOTGET&receiverParty=&receiverService=&interface=SI_MAINNOTGET&interfaceNamespace=http://bala.com';
  var xmlData;
  (async () => {
    const { response } = await soapRequest({ url: url, headers: sampleHeaders, xml: xml, timeout: 10000 });
@@ -230,7 +245,7 @@ router.post('/mainnotup',(req,res)=>{
         <!--Optional:-->
         <REQ_END_DATE>${req.body.req_edate}</REQ_END_DATE>
         <!--Optional:-->
-        <REQ_END_TIME>09:00:00</REQ_END_TIME>
+        <REQ_END_TIME>00:00:00</REQ_END_TIME>
         <!--Optional:-->
         <REQ_START_DATE>${req.body.req_sdate}</REQ_START_DATE>
         <!--Optional:-->
@@ -238,8 +253,8 @@ router.post('/mainnotup',(req,res)=>{
      </urn:ZBAPIMAINNOTUP_FM>
   </soapenv:Body>
 </soapenv:Envelope>`
-const temp={WO_CREATED:['//SOAP:Body//WO_CREATED/item',{col1:'ORDERID',col2:'DESCRIPTION',col3:'ORDERTYPE',col4:'PRIORITY',col5:'PLANT'}],
-RETURN:['//SOAP:Body//RETURN',{TYPE:'TYPE'}]
+const temp={
+RETURN:'//SOAP:Body//RETURN/TYPE'
 };
   const url = 'http://dxktpipo.kaarcloud.com:50000/XISOAPAdapter/MessageServlet?senderParty=&senderService=BC_MAINNOTUP&receiverParty=&receiverService=&interface=SI_MAINNOTUP&interfaceNamespace=http://bala.com';
  var xmlData;
@@ -290,10 +305,10 @@ router.post('/mainwocr',(req,res)=>{
      </urn:ZBAPIMAINWOCR_FM>
   </soapenv:Body>
 </soapenv:Envelope>`
-const temp={WO_CREATED:['//SOAP:Body//WO_CREATED/item',{col1:'ORDERID',col2:'DESCRIPTION',col3:'ORDERTYPE',col4:'PRIORITY',col5:'PLANT'}],
-RETURN:['//SOAP:Body//RETURN',{TYPE:'TYPE'}]
+const temp={
+RETURN:'//SOAP:Body//RETURN/TYPE'
 };
-  const url = 'http://dxktpipo.kaarcloud.com:50000/XISOAPAdapter/MessageServlet?senderParty=&senderService=BC_MAINWOCR&receiverParty=&receiverService=&interface=SI_MAINWOCR&interfaceNamespace=http://bala.com';
+  const url = 'http://dxktpipo.kaarcloud.com:50000/XISOAPWO_CREATED:['//SOAP:Body//WO_CREATED/item',{col1:'ORDERID',col2:'DESCRIPTION',col3:'ORDERTYPE',col4:'PRIORITY',col5:'PLANT'}Adapter/MessageServlet?senderParty=&senderService=BC_MAINWOCR&receiverParty=&receiverService=&interface=SI_MAINWOCR&interfaceNamespace=http://bala.com';
  var xmlData;
  (async () => {
    const { response } = await soapRequest({ url: url, headers: sampleHeaders, xml: xml, timeout: 10000 });
@@ -320,8 +335,15 @@ router.post('/mainwodet',(req,res)=>{
      </urn:ZBAPIMAINWODET_FM>
   </soapenv:Body>
 </soapenv:Envelope>`
-const temp={WO_CREATED:['//SOAP:Body//WO_CREATED/item',{col1:'ORDERID',col2:'DESCRIPTION',col3:'ORDERTYPE',col4:'PRIORITY',col5:'PLANT'}],
-RETURN:['//SOAP:Body//RETURN',{TYPE:'TYPE'}]
+const temp={
+  NOTNO:'//SOAP:Body//NOT_DETAILS/item/NOTIF_NO',
+  DESCRIPTION:'//SOAP:Body//WO_DETAILS/SHORT_TEXT',
+  WONO:'//SOAP:Body//WO_DETAILS/ORDERID',
+  WOTYPE:'//SOAP:Body//WO_DETAILS/ORDER_TYPE',
+  EQUIPID:'//SOAP:Body//WO_DETAILS/EQUIPMENT',
+  PERSONNO:'//SOAP:Body//WO_OPERATIONS/item/PERS_NO',
+  OP_DESC: '//SOAP:Body//WO_OPERATIONS/item/DESCRIPTION',
+RETURN:'//SOAP:Body//RETURN/TYPE'
 };
   const url = 'http://dxktpipo.kaarcloud.com:50000/XISOAPAdapter/MessageServlet?senderParty=&senderService=BC_MAINWODET&receiverParty=&receiverService=&interface=SI_MAINWODET&interfaceNamespace=http://bala.com';
  var xmlData;
@@ -353,12 +375,14 @@ router.post('/mainwoget',(req,res)=>{
   </soapenv:Body>
 </soapenv:Envelope>`
 const temp={WO_CREATED:['//SOAP:Body//WO_CREATED/item',{col1:'ORDERID',col2:'DESCRIPTION',col3:'ORDERTYPE',col4:'PRIORITY',col5:'PLANT'}],
+WO_RELEASED:['//SOAP:Body//WO_RELEASED/item',{col1:'ORDERID',col2:'DESCRIPTION',col3:'ORDERTYPE',col4:'PRIORITY',col5:'PLANT'}],
+WO_COMPLETED:['//SOAP:Body//WO_TECHCOMPLETED/item',{col1:'ORDERID',col2:'DESCRIPTION',col3:'ORDERTYPE',col4:'PRIORITY',col5:'PLANT'}],
 RETURN:['//SOAP:Body//RETURN',{TYPE:'TYPE'}]
 };
   const url = 'http://dxktpipo.kaarcloud.com:50000/XISOAPAdapter/MessageServlet?senderParty=&senderService=BC_MAINWOGET&receiverParty=&receiverService=&interface=SI_MAINWOGET&interfaceNamespace=http://bala.com';
  var xmlData;
  (async () => {
-   const { response } = await soapRequest({ url: url, headers: sampleHeaders, xml: xml, timeout: 10000 });
+   const { response } = await soapRequest({ url: url, headers: sampleHeaders, xml: xml, timeout: 100000 });
    const { headers, body, statusCode } = response;
    console.log(statusCode);
  
@@ -390,7 +414,7 @@ router.post('/mainwoup',(req,res)=>{
         <!--Optional:-->
         <OP_DESC>${req.body.op_desc}</OP_DESC>
         <!--Optional:-->
-        <PERSONNEL_NO>${req.body.personno}</PERSONNEL_NO>
+        <PERSONNEL_NO>0</PERSONNEL_NO>
         <!--Optional:-->
         <PRIORITY>${req.body.priority}</PRIORITY>
         <!--Optional:-->
@@ -403,8 +427,8 @@ router.post('/mainwoup',(req,res)=>{
      </urn:ZBAPIMAINWOUP_FM>
   </soapenv:Body>
 </soapenv:Envelope>`
-const temp={WO_CREATED:['//SOAP:Body//WO_CREATED/item',{col1:'ORDERID',col2:'DESCRIPTION',col3:'ORDERTYPE',col4:'PRIORITY',col5:'PLANT'}],
-RETURN:['//SOAP:Body//RETURN',{TYPE:'TYPE'}]
+const temp={
+RETURN:'//SOAP:Body//RETURN/TYPE'
 };
   const url = 'http://dxktpipo.kaarcloud.com:50000/XISOAPAdapter/MessageServlet?senderParty=&senderService=BC_MAINWOUP&receiverParty=&receiverService=&interface=SI_MAINWOUP&interfaceNamespace=http://bala.com';
  var xmlData;
